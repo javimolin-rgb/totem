@@ -195,48 +195,75 @@ def mat_emit(name, col, strength):
     return m
 
 def mat_ground():
-    m = bpy.data.materials.new("Asfalto"); nt, b = nm(m)
-    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-1000, 0)
-    n1 = nt.nodes.new("ShaderNodeTexNoise"); n1.location = (-800, 160)
-    n1.inputs['Scale'].default_value = 0.09
-    n1.inputs['Detail'].default_value = 15.0
-    n2 = nt.nodes.new("ShaderNodeTexVoronoi"); n2.location = (-800, -160)
-    n2.inputs['Scale'].default_value = 7.5
-    ramp = nt.nodes.new("ShaderNodeValToRGB"); ramp.location = (-580, 160)
-    ramp.color_ramp.elements[0].position = 0.30
-    ramp.color_ramp.elements[0].position = 0.22
-    ramp.color_ramp.elements[0].color = (0.042, 0.040, 0.039, 1)
-    ramp.color_ramp.elements[1].position = 0.72
-    ramp.color_ramp.elements[1].color = (0.205, 0.192, 0.176, 1)
-    rr = nt.nodes.new("ShaderNodeMapRange"); rr.location = (-580, -120)
-    rr.inputs['To Min'].default_value = 0.26
-    rr.inputs['To Max'].default_value = 0.78
-    bump = nt.nodes.new("ShaderNodeBump"); bump.location = (-340, -340)
-    bump.inputs['Strength'].default_value = 0.55
-    bump.inputs['Distance'].default_value = 0.055
-    nt.links.new(tc.outputs['Object'], n1.inputs['Vector'])
-    nt.links.new(tc.outputs['Object'], n2.inputs['Vector'])
-    nt.links.new(n1.outputs['Fac'], ramp.inputs['Fac'])
-    nt.links.new(n1.outputs['Fac'], rr.inputs['Value'])
-    nt.links.new(n2.outputs['Distance'], bump.inputs['Height'])
-    cd = nt.nodes.new("ShaderNodeCameraData"); cd.location = (-580, -380)
-    haze = nt.nodes.new("ShaderNodeMapRange"); haze.location = (-380, -380)
-    haze.inputs['From Min'].default_value = 28.0
-    haze.inputs['From Max'].default_value = 190.0
+    """Explanada de losas de hormigon de 62 cm con junta, grano y bruma a distancia."""
+    m = bpy.data.materials.new("Pavimento"); nt, b = nm(m)
+    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-1200, 0)
+
+    brick = nt.nodes.new("ShaderNodeTexBrick"); brick.location = (-980, 140)
+    brick.offset = 0.0
+    brick.squash = 1.0
+    brick.inputs['Color1'].default_value = (0.118, 0.112, 0.104, 1)
+    brick.inputs['Color2'].default_value = (0.172, 0.163, 0.150, 1)
+    brick.inputs['Mortar'].default_value = (0.038, 0.036, 0.034, 1)
+    brick.inputs['Scale'].default_value = 1.0
+    brick.inputs['Mortar Size'].default_value = 0.006
+    brick.inputs['Mortar Smooth'].default_value = 0.08
+    brick.inputs['Bias'].default_value = 0.0
+    brick.inputs['Brick Width'].default_value = 0.62
+    brick.inputs['Row Height'].default_value = 0.62
+
+    grain = nt.nodes.new("ShaderNodeTexNoise"); grain.location = (-980, -180)
+    grain.inputs['Scale'].default_value = 24.0
+    grain.inputs['Detail'].default_value = 8.0
+    blot = nt.nodes.new("ShaderNodeTexNoise"); blot.location = (-980, -420)
+    blot.inputs['Scale'].default_value = 0.14
+    blot.inputs['Detail'].default_value = 10.0
+
+    dirt = nt.nodes.new("ShaderNodeMixRGB"); dirt.location = (-720, 140)
+    dirt.blend_type = 'MULTIPLY'
+    dirt.inputs['Fac'].default_value = 0.42
+    dirt.inputs['Color2'].default_value = (0.72, 0.70, 0.66, 1)
+
+    rough = nt.nodes.new("ShaderNodeMapRange"); rough.location = (-720, -180)
+    rough.inputs['To Min'].default_value = 0.46
+    rough.inputs['To Max'].default_value = 0.80
+
+    jb = nt.nodes.new("ShaderNodeBump"); jb.location = (-500, -300)
+    jb.inputs['Strength'].default_value = 0.55
+    jb.inputs['Distance'].default_value = 0.012
+    gb = nt.nodes.new("ShaderNodeBump"); gb.location = (-320, -420)
+    gb.inputs['Strength'].default_value = 0.18
+    gb.inputs['Distance'].default_value = 0.004
+
+    cd = nt.nodes.new("ShaderNodeCameraData"); cd.location = (-720, -620)
+    haze = nt.nodes.new("ShaderNodeMapRange"); haze.location = (-500, -620)
+    haze.inputs['From Min'].default_value = 32.0
+    haze.inputs['From Max'].default_value = 200.0
     haze.clamp = True
-    mixh = nt.nodes.new("ShaderNodeMixRGB"); mixh.location = (-120, 60)
-    mixh.inputs['Color2'].default_value = (0.088, 0.080, 0.074, 1)
-    mixr = nt.nodes.new("ShaderNodeMixRGB"); mixr.location = (-120, -160)
-    mixr.inputs['Color2'].default_value = (0.92, 0.92, 0.92, 1)
-    nt.links.new(ramp.outputs['Color'], mixh.inputs['Color1'])
-    nt.links.new(rr.outputs['Result'], mixr.inputs['Color1'])
-    nt.links.new(cd.outputs['View Distance'], haze.inputs['Value'])
-    nt.links.new(haze.outputs['Result'], mixh.inputs['Fac'])
-    nt.links.new(haze.outputs['Result'], mixr.inputs['Fac'])
-    nt.links.new(mixh.outputs['Color'], b.inputs['Base Color'])
-    nt.links.new(mixr.outputs['Color'], b.inputs['Roughness'])
-    nt.links.new(bump.outputs['Normal'], b.inputs['Normal'])
-    setin(b, 'Specular IOR Level', 0.4, ('Specular',))
+    mixh = nt.nodes.new("ShaderNodeMixRGB"); mixh.location = (-180, 120)
+    mixh.inputs['Color2'].default_value = (0.096, 0.090, 0.086, 1)
+    mixr = nt.nodes.new("ShaderNodeMixRGB"); mixr.location = (-180, -120)
+    mixr.inputs['Color2'].default_value = (0.94, 0.94, 0.94, 1)
+
+    L = nt.links.new
+    L(tc.outputs['Object'], brick.inputs['Vector'])
+    L(tc.outputs['Object'], grain.inputs['Vector'])
+    L(tc.outputs['Object'], blot.inputs['Vector'])
+    L(brick.outputs['Color'], dirt.inputs['Color1'])
+    L(blot.outputs['Fac'], dirt.inputs['Fac'])
+    L(grain.outputs['Fac'], rough.inputs['Value'])
+    L(brick.outputs['Fac'], jb.inputs['Height'])
+    L(jb.outputs['Normal'], gb.inputs['Normal'])
+    L(grain.outputs['Fac'], gb.inputs['Height'])
+    L(cd.outputs['View Distance'], haze.inputs['Value'])
+    L(dirt.outputs['Color'], mixh.inputs['Color1'])
+    L(rough.outputs['Result'], mixr.inputs['Color1'])
+    L(haze.outputs['Result'], mixh.inputs['Fac'])
+    L(haze.outputs['Result'], mixr.inputs['Fac'])
+    L(mixh.outputs['Color'], b.inputs['Base Color'])
+    L(mixr.outputs['Color'], b.inputs['Roughness'])
+    L(gb.outputs['Normal'], b.inputs['Normal'])
+    setin(b, 'Specular IOR Level', 0.45, ('Specular',))
     return m
 
 def mat_leaf(col):
@@ -257,7 +284,7 @@ def mat_painted(name, lin_col):
     sep = nt.nodes.new("ShaderNodeSeparateXYZ"); sep.location = (-920, -200)
     grime = nt.nodes.new("ShaderNodeMapRange"); grime.location = (-740, -200)
     grime.inputs['From Min'].default_value = 0.30
-    grime.inputs['From Max'].default_value = 0.95
+    grime.inputs['From Max'].default_value = 0.78
     grime.inputs['To Min'].default_value = 1.0
     grime.inputs['To Max'].default_value = 0.0
     grime.clamp = True
@@ -456,7 +483,7 @@ def build_sun(elev_deg, rot_deg, energy):
     d = bpy.data.lights.new("Sun", 'SUN')
     d.energy = energy
     d.angle = R(1.6)
-    d.color = (1.0, 0.80, 0.64)
+    d.color = (1.0, 0.84, 0.70)
     ob = link(bpy.data.objects.new("Sun", d))
     e, a = R(elev_deg), R(rot_deg)
     ob.rotation_euler = (math.pi / 2 - e, 0, a)
@@ -560,23 +587,27 @@ def main():
     ap.add_argument("--preview", action="store_true")
     ap.add_argument("--backdrop", action="store_true", help="arboleda lejana")
     ap.add_argument("--tilt", action="store_true", help="deja que la camara se incline (verticales convergentes)")
-    ap.add_argument("--elev", type=float, default=-1.2)
+    ap.add_argument("--elev", type=float, default=0.2)
     ap.add_argument("--rot", type=float, default=25.0)
-    ap.add_argument("--emit", type=float, default=1.9)
+    ap.add_argument("--sunelev", type=float, default=9.0)
+    ap.add_argument("--sunrot", type=float, default=72.0)
+    ap.add_argument("--sunpow", type=float, default=2.6)
+    ap.add_argument("--world", type=float, default=1.5)
+    ap.add_argument("--emit", type=float, default=2.1)
     ap.add_argument("--lens", type=float, default=70.0)
     ap.add_argument("--fstop", type=float, default=3.5)
-    ap.add_argument("--cam", default="6.6,-10.6,2.85")
-    ap.add_argument("--look", default="0.05,0,3.30")
+    ap.add_argument("--cam", default="7.2,-11.6,2.85")
+    ap.add_argument("--look", default="0.05,0,3.10")
     a = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:])
 
     w, h = (int(x) for x in a.res.lower().split("x"))
     sc = reset()
 
-    build_world(a.elev, a.rot, 2.3)
+    build_world(a.elev, a.rot, a.world)
     build_ground()
     if a.backdrop:
         build_backdrop()
-    build_sun(2.0, a.rot, 1.3)
+    build_sun(a.sunelev, a.sunrot, a.sunpow)
     build_totem(a.emit)
     build_camera(a.lens, a.fstop,
                  [float(v) for v in a.cam.split(",")],

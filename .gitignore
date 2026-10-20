@@ -1,0 +1,5 @@
+render/out/test*.png
+render/out/smoke.png
+render/out/*.log
+render/css_*.txt
+render/urls.txt

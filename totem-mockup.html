@@ -106,7 +106,7 @@ td b{font-weight:500}
       <h1>Tótem <em>De Cosecha</em></h1>
       <p class="sub">Modelado 3D del tótem publicitario con los cajones vacíos listos para recibir tus artes. Carga cada diseño, elige encuadre y ambiente, y exporta el fotomontaje.</p>
     </div>
-    <div class="stamp">Rev. A · 6,45 m · 5 cajones</div>
+    <div class="stamp">Rev. B · 5,40 m · 4 cajones</div>
   </header>
 
   <div class="studio">
@@ -151,7 +151,7 @@ td b{font-weight:500}
     <p class="lede">Medidas sobre las que está construido el modelo. Si cambian en obra, dímelo y ajusto la geometría antes de que montes los artes definitivos.</p>
 
     <dl class="specs">
-      <div class="spec"><dt>Altura total</dt><dd>6,45 m <span>sobre rasante</span></dd></div>
+      <div class="spec"><dt>Altura total</dt><dd>5,40 m <span>sobre rasante</span></dd></div>
       <div class="spec"><dt>Estructura</dt><dd>Tubo estructural 200×200×4 mm <span>+ montante auxiliar 140×140×3 mm</span></dd></div>
       <div class="spec"><dt>Cajones</dt><dd>Aluminio compuesto 3 mm <span>· marco perimetral 120 mm</span></dd></div>
       <div class="spec"><dt>Frente luminoso</dt><dd>Opal acrílico 4 mm <span>con vinilo translúcido impreso</span></dd></div>
@@ -170,7 +170,7 @@ td b{font-weight:500}
     </div>
 
     <p class="note"><strong>Cómo entregar los artes.</strong> Vectorial en PDF o AI con tipografías trazadas, o TIFF a escala 1:10 con 300 ppp. CMYK más los Pantone de marca aparte. Deja 20 mm de sangrado por lado sobre la medida de arte: ese borde queda mordido por el marco. En el tótem iluminado los verdes oscuros pierden fuerza de noche, así que conviene reservarlos para texto y dejar los fondos claros.</p>
-    <p class="note">Los cinco artes que ves ahora son de muestra, dibujados a partir de la foto de referencia para que el set no salga vacío. Sustitúyelos por los tuyos desde el panel de la derecha.</p>
+    <p class="note">Los cuatro artes que ves ahora son de muestra, dibujados a partir de la foto de referencia para que el set no salga vacío. Sustitúyelos por los tuyos desde el panel de la derecha.</p>
   </section>
 </div>
 
@@ -191,11 +191,10 @@ td b{font-weight:500}
 
 /* ============ especificación de cajones (mm reales) ============ */
 var PANELS = [
-  {id:"logo",  label:"Cabecera / logotipo", mm:[2200,1250], w:2.20, h:1.25, y:5.55, kind:"rect"},
-  {id:"p1",    label:"Cajón 1 · Frutas",    mm:[1900,820],  w:1.90, h:0.82, y:4.35, kind:"rect"},
-  {id:"p2",    label:"Cajón 2 · Verduras",  mm:[1900,820],  w:1.90, h:0.82, y:3.40, kind:"rect"},
-  {id:"p3",    label:"Cajón 3 · Abarrotes", mm:[1900,820],  w:1.90, h:0.82, y:2.45, kind:"rect"},
-  {id:"arrow", label:"Flecha direccional",  mm:[1900,700],  w:1.90, h:0.70, y:1.40, kind:"arrow"}
+  {id:"logo",  label:"Cabecera / logotipo", mm:[2200,1250], w:2.20, h:1.25, y:4.50},
+  {id:"p1",    label:"Cajón 1 · Frutas",    mm:[1900,820],  w:1.90, h:0.82, y:3.30},
+  {id:"p2",    label:"Cajón 2 · Verduras",  mm:[1900,820],  w:1.90, h:0.82, y:2.35},
+  {id:"p3",    label:"Cajón 3 · Abarrotes", mm:[1900,820],  w:1.90, h:0.82, y:1.40}
 ];
 
 var SCENES = {
@@ -212,10 +211,10 @@ var MATS = {
 };
 
 var SHOTS = [
-  {name:"Héroe 3/4", pos:[5.6,3.5,7.6],  tgt:[0,3.25,0]},
-  {name:"Frontal",   pos:[0.2,3.3,11.4], tgt:[0,3.30,0]},
-  {name:"Contrapicado",pos:[3.4,0.85,5.4],tgt:[0,4.10,0]},
-  {name:"Detalle",   pos:[1.9,5.30,3.3], tgt:[-0.05,5.30,0]}
+  {name:"Héroe 3/4", pos:[5.0,2.9,6.8],  tgt:[0,2.75,0]},
+  {name:"Frontal",   pos:[0.2,2.8,10.2], tgt:[0,2.80,0]},
+  {name:"Contrapicado",pos:[3.0,0.8,4.8],tgt:[0,3.40,0]},
+  {name:"Detalle",   pos:[1.8,4.45,3.0], tgt:[-0.05,4.45,0]}
 ];
 
 var SIZES = [{name:"1×",k:1},{name:"2×",k:2},{name:"3×",k:3}];
@@ -291,17 +290,6 @@ function artCat(W,H,word,set){
   signText(g,word,W*0.055,H*0.46,Math.round(H*0.44));
   return c;
 }
-function artArrow(W,H){
-  var c=cv(W,H),g=c.getContext("2d");
-  var grad=g.createLinearGradient(0,0,W,0);
-  grad.addColorStop(0,"#efe6cd"); grad.addColorStop(1,CREAM);
-  g.fillStyle=grad; g.fillRect(0,0,W,H);
-  g.strokeStyle="#c9a24a"; g.lineWidth=H*0.045;
-  g.strokeRect(H*0.09,H*0.09,W-H*0.18,H-H*0.18);
-  g.fillStyle="rgba(47,107,50,.16)";
-  g.fillRect(H*0.22,H*0.40,W*0.52,H*0.20);
-  return c;
-}
 var SET_FRUTA=[[-0.30,0.02,0.16,0.10,"#f2c53d",-0.5],[-0.12,-0.06,0.15,0.10,"#f2c53d",-0.35],
   [0.10,-0.12,0.13,0.13,"#8ec63f",0],[0.26,0.00,0.14,0.14,"#d94434",0],
   [-0.02,0.18,0.11,0.11,"#ef8a2b",0],[0.20,0.22,0.09,0.09,"#c7303a",0],[-0.26,0.22,0.08,0.08,"#b8243a",0]];
@@ -325,8 +313,8 @@ var MAXA=renderer.capabilities.getMaxAnisotropy();
 var scene=new THREE.Scene();
 scene.fog=new THREE.FogExp2(0xcfc9bf,0.0045);
 var camera=new THREE.PerspectiveCamera(30,1,0.1,400);
-camera.position.set(5.6,3.5,7.6);
-var target=new THREE.Vector3(0,3.25,0);
+camera.position.set(5.0,2.9,6.8);
+var target=new THREE.Vector3(0,2.75,0);
 
 /* --- entorno IBL procedural --- */
 function envTexture(){
@@ -375,7 +363,7 @@ key.shadow.bias=-0.0012; key.shadow.normalBias=0.025;
 scene.add(key);
 var fill=new THREE.DirectionalLight(0xc8d6e6,0.75); fill.position.set(-9,5,6); scene.add(fill);
 var rim=new THREE.DirectionalLight(0xffd9a8,0.9);  rim.position.set(-5,7,-9); scene.add(rim);
-var glowLight=new THREE.PointLight(0xffc477,0,9,2); glowLight.position.set(0,4.0,0.9); scene.add(glowLight);
+var glowLight=new THREE.PointLight(0xffc477,0,9,2); glowLight.position.set(0,3.2,0.9); scene.add(glowLight);
 
 /* --- suelo / ciclorama --- */
 var cycMat=new THREE.MeshStandardMaterial({color:0xd9d4cb,roughness:0.94,metalness:0.0,side:THREE.DoubleSide});
@@ -427,19 +415,6 @@ function faceMaterial(t){
     roughness:0.52, metalness:0.0, side:THREE.FrontSide
   });
 }
-function normalizeUV(geo){
-  geo.computeBoundingBox();
-  var bb=geo.boundingBox, uv=geo.attributes.uv, pos=geo.attributes.position;
-  var w=bb.max.x-bb.min.x, h=bb.max.y-bb.min.y, i;
-  for(i=0;i<uv.count;i++) uv.setXY(i,(pos.getX(i)-bb.min.x)/w,(pos.getY(i)-bb.min.y)/h);
-  uv.needsUpdate=true;
-}
-function arrowShape(w,h){
-  var hs=h*0.60, lh=w*0.33, s=new THREE.Shape();
-  s.moveTo(-w/2,-hs/2); s.lineTo(w/2-lh,-hs/2); s.lineTo(w/2-lh,-h/2);
-  s.lineTo(w/2,0); s.lineTo(w/2-lh,h/2); s.lineTo(w/2-lh,hs/2);
-  s.lineTo(-w/2,hs/2); s.closePath(); return s;
-}
 
 /* --- tótem --- */
 var totem=new THREE.Group(); scene.add(totem);
@@ -453,20 +428,9 @@ function buildLightbox(spec,texture){
   var w=spec.w,h=spec.h, zf=DEPTH/2+0.004;
   var front,back,body;
 
-  if(spec.kind==="arrow"){
-    var sh=arrowShape(w,h);
-    body=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:DEPTH,bevelEnabled:false}),frameMat);
-    body.geometry.translate(0,0,-DEPTH/2);
-    body.castShadow=true; body.receiveShadow=true;
-    var fg=new THREE.ShapeGeometry(sh); normalizeUV(fg);
-    var bg=fg.clone();
-    front=new THREE.Mesh(fg,faceMaterial(texture));
-    back =new THREE.Mesh(bg,faceMaterial(texture));
-  }else{
-    body=box(w+0.10,h+0.10,DEPTH,frameMat);
-    front=new THREE.Mesh(new THREE.PlaneGeometry(w,h),faceMaterial(texture));
-    back =new THREE.Mesh(new THREE.PlaneGeometry(w,h),faceMaterial(texture));
-  }
+  body=box(w+0.10,h+0.10,DEPTH,frameMat);
+  front=new THREE.Mesh(new THREE.PlaneGeometry(w,h),faceMaterial(texture));
+  back =new THREE.Mesh(new THREE.PlaneGeometry(w,h),faceMaterial(texture));
   front.position.z=zf;
   back.position.z=-zf; back.rotation.y=Math.PI;
   front.userData.panel=spec.id; back.userData.panel=spec.id;
@@ -491,22 +455,22 @@ function buildLightbox(spec,texture){
 
 function buildTotem(){
   // mástil principal + montante auxiliar
-  var mast=box(0.26,6.45,0.30); mast.position.set(MAST_X,3.225,0); totem.add(mast);
-  var upr=box(0.145,5.85,0.17); upr.position.set(UPR_X,3.10,0); totem.add(upr);
-  var cap=box(0.42,0.12,0.44); cap.position.set(MAST_X,6.49,0); totem.add(cap);
+  var mast=box(0.26,5.40,0.30); mast.position.set(MAST_X,2.70,0); totem.add(mast);
+  var upr=box(0.145,4.80,0.17); upr.position.set(UPR_X,2.55,0); totem.add(upr);
+  var cap=box(0.42,0.12,0.44); cap.position.set(MAST_X,5.44,0); totem.add(cap);
   var base=box(0.56,0.16,0.56,trimMat); base.position.set(MAST_X,0.08,0); totem.add(base);
 
   // tiras LED sobre el mástil
   var i,strip,g;
   for(i=0;i<2;i++){
-    strip=new THREE.Mesh(new THREE.BoxGeometry(0.035,5.9,0.035),ledMat);
-    strip.position.set(MAST_X+(i?0.145:-0.145),3.3,0.155); totem.add(strip);
+    strip=new THREE.Mesh(new THREE.BoxGeometry(0.035,4.90,0.035),ledMat);
+    strip.position.set(MAST_X+(i?0.145:-0.145),2.78,0.155); totem.add(strip);
     leds.push(strip.material);
-    g=glowPlane(0.46,6.3); g.position.set(MAST_X+(i?0.145:-0.145),3.3,0.30);
+    g=glowPlane(0.46,5.30); g.position.set(MAST_X+(i?0.145:-0.145),2.78,0.30);
     glows.push(g.material); totem.add(g);
   }
-  var strip2=new THREE.Mesh(new THREE.BoxGeometry(0.03,5.6,0.03),ledMat);
-  strip2.position.set(UPR_X,3.1,0.10); totem.add(strip2);
+  var strip2=new THREE.Mesh(new THREE.BoxGeometry(0.03,4.60,0.03),ledMat);
+  strip2.position.set(UPR_X,2.55,0.10); totem.add(strip2);
 
   // proyectores superiores
   var top=PANELS[0];
@@ -560,7 +524,6 @@ function buildDefaults(){
   defaults.p1   =artCat(1520,656,"FRUTAS",SET_FRUTA);
   defaults.p2   =artCat(1520,656,"VERDURAS",SET_VERD);
   defaults.p3   =artCat(1520,656,"ABARROTES",SET_ABA);
-  defaults.arrow=artArrow(1520,560);
 }
 
 buildDefaults();
